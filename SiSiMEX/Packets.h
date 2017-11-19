@@ -67,32 +67,16 @@ public:
 using PacketUnregisterMCC = PacketRegisterMCC;
 
 /**
+* class PacketQueryMCCsForItem
 * The information is the same required for PacketRegisterMCC so...
 */
-using PacketQueryMCCsForItem = PacketRegisterMCC;
+// TODO
 
 /**
+ * class PacketReturnMCCsForItem
  * This packet is the response for PacketQueryMCCsForItem and
  * is sent by an MCP (MultiCastPetitioner) agent.
- * It contains a list of the addresses of MCC agents contributing
+ * It contains a list of the registers of MCC agents contributing
  * with the item specified by the PacketQueryMCCsForItem.
  */
-class PacketReturnMCCsForItem {
-public:
-	std::vector<MCCRegister> mccAddresses;
-	void Read(InputMemoryStream &stream) {
-		uint16_t count;
-		stream.Read(count);
-		mccAddresses.resize(count);
-		for (auto &mccAddress : mccAddresses) {
-			mccAddress.Read(stream);
-		}
-	}
-	void Write(OutputMemoryStream &stream) {
-		auto count = static_cast<uint16_t>(mccAddresses.size());
-		stream.Write(count);
-		for (auto &mccAddress : mccAddresses) {
-			mccAddress.Write(stream);
-		}
-	}
-};
+// TODO

@@ -155,28 +155,12 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 	{
 		iLog << "PacketType::QueryMCCsForItem";
 		
-		// Read packet
-		PacketQueryMCCsForItem inPacketData;
-		inPacketData.Read(stream);
-
-		// Response packet
-		PacketReturnMCCsForItem outPacketData;
-
-		// Obtain the MCCAddresses
-		auto itemId = inPacketData.itemId;
-		auto &mccAddressList = _mccByItem[itemId];
-		for (auto &mccAddress : mccAddressList) {
-			outPacketData.mccAddresses.push_back(mccAddress);
-		}
-
-		// Send response packet
-		OutputMemoryStream outStream;
-		PacketHeader outPacketHead;
-		outPacketHead.packetType = PacketType::ReturnMCCsForItem;
-		outPacketHead.dstAgentId = inPacketHead.srcAgentId;
-		outPacketHead.Write(outStream);
-		outPacketData.Write(outStream);
-		socket->SendPacket(outStream.GetBufferPtr(), outStream.GetSize());
+		// TODO:
+		// 1) Deserialize packet data and get the info
+		// 2) Create response packet
+		// 3) Fill the response packet with MCC data
+		// 4) Serialize the packet
+		// 5) Send the response back to the socket
 	}
 }
 

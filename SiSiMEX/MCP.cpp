@@ -30,7 +30,7 @@ void MCP::update()
 		// Handled from OnPacketReceived
 	}
 	else if (state() == ST_IDLE) {
-		// TODO MCP stuff
+		// By now, finish the agent after receiving the initial request...
 		setState(ST_FINISHING);
 	}
 	else if (state() == ST_FINISHING) {
@@ -45,21 +45,13 @@ void MCP::finalize()
 
 bool MCP::queryMCCsForItem(int itemId)
 {
-	// Create message header and data
-	PacketHeader packetHead;
-	packetHead.packetType = PacketType::QueryMCCsForItem;
-	packetHead.srcAgentId = id();
-	packetHead.dstAgentId = -1;
-	PacketQueryMCCsForItem packetData;
-	packetData.itemId = _itemId;
+	// TODO:
+	// 1) Create a query packet
+	// 2) Serialize it
+	// 3) Send it to the yellow pages:
+	//    return sendPacketToYellowPages(stream);
 
-	// Serialize message
-	OutputMemoryStream stream;
-	packetHead.Write(stream);
-	packetData.Write(stream);
-
-	// Append data
-	return sendPacketToYellowPages(stream);
+	return true; // remove after filling the function properly
 }
 
 void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
@@ -69,19 +61,10 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	{
 		iLog << "OnPacketReceived PacketType::ReturnMCCsForItem " << _itemId;
 
-		// Read the packet
-		PacketReturnMCCsForItem packetData;
-		packetData.Read(stream);
-
-		for (auto &mccdata : packetData.mccAddresses)
-		{
-			uint16_t agentId = mccdata.agentId;
-			const std::string &hostIp = mccdata.hostIP;
-			uint16_t hostPort = mccdata.hostPort;
-			iLog << " - MCC: " << agentId << " - host: " << hostIp << ":" << hostPort;
-		}
-
-		socket->Disconnect();
-		setState(ST_IDLE);
+		// TODO:
+		// 1) Deserialize the packet
+		// 2) Log the received MCC registers
+		// 3) Disconnect the socket
+		// 4) Set the next state (IDLE by now)
 	}
 }

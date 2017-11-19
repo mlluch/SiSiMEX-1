@@ -120,9 +120,10 @@ void MultiAgentApplication::spawnMCP(int nodeId, int itemId)
 {
 	iLog << "Spawn MCP for node " << nodeId << " petitioning item " << itemId;
 	if (nodeId >= 0 && nodeId < _nodes.size()) {
-		NodePtr node = _nodes[nodeId];
-		AgentPtr agent(new MCP(node.get(), itemId));
-		g_AgentContainer->addAgent(agent);
+		// TODO:
+		// 1) Get the node
+		// 2) Create a new MCP agent
+		// 3) Add it to the agent container
 	}
 	else {
 		wLog << "Could not find node with ID " << nodeId;
