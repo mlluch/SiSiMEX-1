@@ -45,24 +45,6 @@ void MCP::finalize()
 
 bool MCP::queryMCCsForItem(int itemId)
 {
-	// Create listen socket
-	TCPSocketPtr agentSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
-	if (agentSocket == nullptr) {
-		eLog << "SocketUtil::CreateTCPSocket() failed";
-		return false;
-	}
-
-	// Connect to Yellow Pages
-	SocketAddress yellowPagesAddress("localhost:8000");
-	int res = agentSocket->Connect(yellowPagesAddress);
-	if (res != NO_ERROR) {
-		eLog << "TCPSocket::Connect() failed";
-		return false;
-	}
-
-	// Add socket to the network manager
-	g_NetworkManager->AddSocket(agentSocket);
-
 	// Create message header and data
 	PacketHeader packetHead;
 	packetHead.packetType = PacketType::QueryMCCsForItem;
@@ -77,13 +59,12 @@ bool MCP::queryMCCsForItem(int itemId)
 	packetData.Write(stream);
 
 	// Append data
-	agentSocket->SendPacket(stream.GetBufferPtr(), stream.GetSize());
-
-	return true;
+	return sendPacketToYellowPages(stream);
 }
 
-void MCP::OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemoryStream &stream)
+void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
 {
+	const PacketType packetType = packetHeader.packetType;
 	if (state() == ST_REQUESTING_MCCs && packetType == PacketType::ReturnMCCsForItem)
 	{
 		iLog << "OnPacketReceived PacketType::ReturnMCCsForItem " << _itemId;
@@ -100,6 +81,7 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemo
 			iLog << " - MCC: " << agentId << " - host: " << hostIp << ":" << hostPort;
 		}
 
+		socket->Disconnect();
 		setState(ST_IDLE);
 	}
 }

@@ -3,7 +3,7 @@
 #include <algorithm>
 
 
-Item::Item() : _id(0)
+Item::Item() : _id(NULL_ITEM_ID)
 {
 }
 
@@ -16,15 +16,15 @@ Item::~Item()
 {
 }
 
-void Item::Write(OutputMemoryStream &stream)
-{
-	stream.Write(_id);
-}
-
-void Item::Read(InputMemoryStream &stream)
-{
-	stream.Read(_id);
-}
+//void Item::Write(OutputMemoryStream &stream)
+//{
+//	stream.Write(_id);
+//}
+//
+//void Item::Read(InputMemoryStream &stream)
+//{
+//	stream.Read(_id);
+//}
 
 
 ItemList::ItemList()
@@ -82,21 +82,21 @@ ItemList ItemList::getSpareItems() const
 	return spareItems;
 }
 
-void ItemList::Write(OutputMemoryStream &stream)
-{
-	int16_t itemCount = static_cast<int16_t>(_items.size());
-	stream.Write(itemCount);
-	for (auto item : _items) {
-		item.Write(stream);
-	}
-}
-
-void ItemList::Read(InputMemoryStream &stream)
-{
-	int16_t itemCount;
-	stream.Read(itemCount);
-	_items.resize(itemCount);
-	for (auto item : _items) {
-		item.Read(stream);
-	}
-}
+//void ItemList::Write(OutputMemoryStream &stream)
+//{
+//	int16_t itemCount = static_cast<int16_t>(_items.size());
+//	stream.Write(itemCount);
+//	for (auto item : _items) {
+//		item.Write(stream);
+//	}
+//}
+//
+//void ItemList::Read(InputMemoryStream &stream)
+//{
+//	int16_t itemCount;
+//	stream.Read(itemCount);
+//	_items.resize(itemCount);
+//	for (auto item : _items) {
+//		item.Read(stream);
+//	}
+//}

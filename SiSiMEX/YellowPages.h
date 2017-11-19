@@ -1,14 +1,17 @@
 #pragma once
-#include "MCCAddress.h"
+#include "MCCRegister.h"
 #include <Net.h>
 #include<map>
 
 class YellowPages : TCPNetworkManagerDelegate
 {
 public:
+
+	// Constructor and destructor
 	YellowPages();
 	~YellowPages();
 
+	// Main methods
 	bool initialize();
 	void update();
 	void finalize();
@@ -22,6 +25,6 @@ private:
 
 	TCPNetworkManager _networkManager; /**< The network manager. */
 
-	std::map<uint16_t, std::list<MCCAddress> > _mccByItem; /**< MCCs accessed by item id. */
+	std::map<uint16_t, std::list<MCCRegister> > _mccByItem; /**< MCCs accessed by item id. */
 };
 

@@ -1,8 +1,4 @@
 #include "MCC.h"
-#include "Globals.h"
-#include "Packets.h"
-#include "Log.h"
-#include <iostream>
 
 enum State
 {
@@ -58,24 +54,6 @@ void MCC::finalize()
 
 bool MCC::registerIntoYellowPages()
 {
-	// Create listen socket
-	TCPSocketPtr agentSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
-	if (agentSocket == nullptr) {
-		eLog << "SocketUtil::CreateTCPSocket() failed";
-		return false;
-	}
-
-	// Connect to Yellow Pages
-	SocketAddress yellowPagesAddress("localhost:8000");
-	int res = agentSocket->Connect(yellowPagesAddress);
-	if (res != NO_ERROR) {
-		eLog << "TCPSocket::Connect() failed";
-		return false;
-	}
-
-	// Add socket to the network manager
-	g_NetworkManager->AddSocket(agentSocket);
-
 	// Create message header and data
 	PacketHeader packetHead;
 	packetHead.packetType = PacketType::RegisterMCC;
@@ -89,10 +67,7 @@ bool MCC::registerIntoYellowPages()
 	packetHead.Write(stream);
 	packetData.Write(stream);
 
-	// Append data
-	agentSocket->SendPacket(stream.GetBufferPtr(), stream.GetSize());
-
-	return true;
+	return sendPacketToYellowPages(stream);
 }
 
 void MCC::waitForRegisterAck()
@@ -102,24 +77,6 @@ void MCC::waitForRegisterAck()
 
 void MCC::unregisterFromYellowPages()
 {
-	// Create listen socket
-	TCPSocketPtr agentSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
-	if (agentSocket == nullptr) {
-		eLog << "SocketUtil::CreateTCPSocket() failed";
-		return;
-	}
-
-	// Connect to Yellow Pages
-	SocketAddress yellowPagesAddress("localhost:8000");
-	int res = agentSocket->Connect(yellowPagesAddress);
-	if (res != NO_ERROR) {
-		eLog << "TCPSocket::Connect() failed";
-		return;
-	}
-
-	// Add socket to the network manager
-	g_NetworkManager->AddSocket(agentSocket);
-
 	// Create message
 	PacketHeader packetHead;
 	packetHead.packetType = PacketType::UnregisterMCC;
@@ -133,10 +90,7 @@ void MCC::unregisterFromYellowPages()
 	packetHead.Write(stream);
 	packetData.Write(stream);
 
-	// Append data
-	agentSocket->SendPacket(stream.GetBufferPtr(), stream.GetSize());
-
-	setState(ST_UNREGISTERING);
+	sendPacketToYellowPages(stream);
 }
 
 void MCC::waitForUnregisterAck()
@@ -145,8 +99,9 @@ void MCC::waitForUnregisterAck()
 }
 
 
-void MCC::OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemoryStream &stream)
+void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
 {
+	const PacketType packetType = packetHeader.packetType;
 	if (state() == ST_REGISTERING && packetType == PacketType::RegisterMCCAck) {
 		setState(ST_IDLE);
 		socket->Disconnect();

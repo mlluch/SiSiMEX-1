@@ -1,6 +1,5 @@
 #pragma once
 #include "Agent.h"
-#include "Item.h"
 
 class MCP :
 	public Agent
@@ -13,7 +12,7 @@ public:
 	void update() override;
 	void finalize() override;
 
-	void OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemoryStream &stream) override;
+	void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) override;
 
 private:
 

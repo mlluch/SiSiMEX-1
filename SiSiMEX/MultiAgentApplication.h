@@ -10,6 +10,8 @@
 class MultiAgentApplication : public TCPNetworkManagerDelegate
 {
 public:
+
+	// Constructor and destructor
 	MultiAgentApplication();
 	~MultiAgentApplication();
 
@@ -18,7 +20,7 @@ public:
 	void update();
 	void finalize();
 
-	// User actions
+	// User actions (called from GUICallbacks.cpp)
 	void listLocalNodes();
 	void inspectLocalNode(int nodeId);
 	void spawnMCP(int nodeId, int itemId);

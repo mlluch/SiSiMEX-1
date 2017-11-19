@@ -150,7 +150,7 @@ void MultiAgentApplication::OnPacketReceived(TCPSocketPtr socket, InputMemoryStr
 	auto agentPtr = _agentContainer.getAgent(packetHead.dstAgentId);
 	if (agentPtr != nullptr)
 	{
-		agentPtr->OnPacketReceived(socket, packetHead.packetType, stream);
+		agentPtr->OnPacketReceived(socket, packetHead, stream);
 	}
 	else
 	{

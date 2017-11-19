@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <iostream>
 #include "GUI/GUI.h"
 

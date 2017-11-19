@@ -20,6 +20,9 @@ static const int MAX_NODES = 3;
  */
 static const int MAX_ITEMS = 5;
 
+/** Hostname (or IP address) of the YellowPages process. */
+static const char *HOSTNAME_YP = "localhost";
+
 /** Listen port used by the YellowPages process. */
 static const uint16_t LISTEN_PORT_YP = 8000;
 
@@ -34,6 +37,16 @@ static const uint16_t LISTEN_PORT_AGENTS = 8001;
  * contributor agents, but uses no agents to work.
  */
 static const uint16_t NULL_AGENT_ID = 0;
+
+/**
+ * Constant used to specify a null item ID.
+ * This is used mainly in MCCs without an item
+ * constraint, that is, those contributors that don't
+ * require another item in exchange to provide its
+ * resource. In those cases, the constraint item
+ * attribute is assigned the NULL_ITEM_ID value.
+ */
+static const uint16_t NULL_ITEM_ID = 9999;
 
 
 

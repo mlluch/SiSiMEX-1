@@ -108,10 +108,10 @@
     <ClInclude Include="MCC.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
-    <ClInclude Include="MCCAddress.h">
+    <ClInclude Include="MCP.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
-    <ClInclude Include="MCP.h">
+    <ClInclude Include="MCCRegister.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
   </ItemGroup>

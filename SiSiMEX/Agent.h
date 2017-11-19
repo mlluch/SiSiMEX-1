@@ -1,4 +1,5 @@
 #pragma once
+#include "Globals.h"
 #include "Log.h"
 #include "Item.h"
 #include "Packets.h"
@@ -28,14 +29,17 @@ public:
 	int state() const { return _state; }
 	void setState(int state) { _state = state; }
 
+	// Packet send functions
+	bool sendPacketToYellowPages(OutputMemoryStream &stream);
+
 	// Function called from MultiAgentApplication to forward packets received from the network
-	virtual void OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemoryStream &stream) = 0;
+	virtual void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) = 0;
 
 protected:
 
 	// Finish condition (if true, will be removed from AgentManager)
 	// Should be called by the agent itself when it finished
-	void finish() { _finished = true; }
+	void finish();
 
 private:
 
@@ -54,6 +58,8 @@ private:
 	uint16_t _id; /**< Agent identifier. */
 
 	int _state; /**< Current state of the agent. */
+
+	std::vector<TCPSocketPtr> _sockets; /**< Sockets used from this agent. */
 };
 
 using AgentPtr = std::shared_ptr<Agent>;

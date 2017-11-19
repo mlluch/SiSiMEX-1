@@ -50,6 +50,7 @@ void multiagentsApplicationInitialize()
 
 	Fl_Text_Buffer *buff = new Fl_Text_Buffer();
 	guiTextDisplayAgentsLog->buffer(buff);
+	g_Log.enableFileOutput("log_multiagents.txt");
 	g_Log.addOutput(&agentsLogOutput);
 
 	Fl::add_idle(&multiagentsApplicationUpdate, nullptr);
@@ -82,6 +83,7 @@ void yellowPagesApplicationInitialize()
 
 	Fl_Text_Buffer *buff = new Fl_Text_Buffer();
 	guiTextDisplayYPLog->buffer(buff);
+	g_Log.enableFileOutput("log_yellowpages.txt");
 	g_Log.addOutput(&yellowPagesLogOutput);
 
 	Fl::add_idle(&yellowPagesApplicationUpdate, nullptr);
@@ -144,14 +146,14 @@ void onGuiButtonListLocalNodes()
 
 void onGuiButtonInspectLocalNode()
 {
-	int nodeId = guiSpinnerNodeID->value();
+	int nodeId = static_cast<int>(guiSpinnerNodeID->value());
 	g_MultiAgentApp->inspectLocalNode(nodeId);
 }
 
 void onguiButtonGetContributorsForItem()
 {
-	int nodeId = guiSpinnerMCPNodeID->value();
-	int itemId = guiSpinnerMCPItemID->value();
+	int nodeId = static_cast<int>(guiSpinnerMCPNodeID->value());
+	int itemId = static_cast<int>(guiSpinnerMCPItemID->value());
 	g_MultiAgentApp->spawnMCP(nodeId, itemId);
 }
 

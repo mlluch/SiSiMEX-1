@@ -1,6 +1,6 @@
 #pragma once
 #include "Globals.h"
-#include "MCCAddress.h"
+#include "MCCRegister.h"
 
 /**
  * Enumerated type for packets.
@@ -79,7 +79,7 @@ using PacketQueryMCCsForItem = PacketRegisterMCC;
  */
 class PacketReturnMCCsForItem {
 public:
-	std::vector<MCCAddress> mccAddresses;
+	std::vector<MCCRegister> mccAddresses;
 	void Read(InputMemoryStream &stream) {
 		uint16_t count;
 		stream.Read(count);
