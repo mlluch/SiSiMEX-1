@@ -7,7 +7,7 @@ class MCP :
 {
 public:
 
-	MCP(uint16_t itemId);
+	MCP(Node *node, uint16_t itemId);
 	~MCP();
 
 	void update() override;
@@ -16,6 +16,8 @@ public:
 	void OnPacketReceived(TCPSocketPtr socket, PacketType packetType, InputMemoryStream &stream) override;
 
 private:
+
+	bool queryMCCsForItem(int itemId);
 
 	uint16_t _itemId;
 };

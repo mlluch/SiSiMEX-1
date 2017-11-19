@@ -1,5 +1,5 @@
 #include "Globals.h"
 
-AgentManager *g_AgentManager = nullptr;
+AgentContainer *g_AgentContainer = nullptr;
 
 TCPNetworkManager *g_NetworkManager = nullptr;

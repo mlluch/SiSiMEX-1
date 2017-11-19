@@ -68,7 +68,7 @@ static void cb_Inspect(Fl_Button*, void*) {
   onGuiButtonInspectLocalNode();
 }
 
-static void cb_Get(Fl_Button*, void*) {
+static void cb_Spawn(Fl_Button*, void*) {
   onguiButtonGetContributorsForItem();
 }
 
@@ -76,32 +76,52 @@ static void cb_Quit(Fl_Button*, void*) {
   onGuiButtonQuitMultiagentApplication();
 }
 
+Fl_Text_Display *guiTextDisplayAgentsLog=(Fl_Text_Display *)0;
+
+Fl_Spinner *guiSpinnerNodeID=(Fl_Spinner *)0;
+
+Fl_Spinner *guiSpinnerMCPItemID=(Fl_Spinner *)0;
+
+Fl_Spinner *guiSpinnerMCPNodeID=(Fl_Spinner *)0;
+
 /**
  Main menu of the multi-agents application.
  It provides buttons to execute several actions.
 */
 Fl_Double_Window* make_window_multiagents_application() {
-  { guiWindowMultiagentApplication = new Fl_Double_Window(190, 181, "SiSiMEX Multi Agent Application");
-    { Fl_Button* o = new Fl_Button(5, 5, 180, 25, "List local nodes");
+  { guiWindowMultiagentApplication = new Fl_Double_Window(594, 580, "SiSiMEX Multi Agent Application");
+    { Fl_Button* o = new Fl_Button(5, 5, 585, 25, "List local nodes");
       o->callback((Fl_Callback*)cb_List);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { Fl_Button* o = new Fl_Button(5, 30, 180, 25, "Inspect local node");
+    { Fl_Button* o = new Fl_Button(5, 30, 495, 25, "Inspect local node");
       o->callback((Fl_Callback*)cb_Inspect);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { Fl_Button* o = new Fl_Button(5, 55, 180, 25, "Get contributors for item");
-      o->callback((Fl_Callback*)cb_Get);
+    { Fl_Button* o = new Fl_Button(5, 55, 340, 25, "Spawn MCP");
+      o->callback((Fl_Callback*)cb_Spawn);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { Fl_Group* o = new Fl_Group(5, 85, 180, 60);
-      o->end();
-      Fl_Group::current()->resizable(o);
-    } // Fl_Group* o
-    { Fl_Button* o = new Fl_Button(5, 150, 180, 25, "Quit Multi Agent Application");
+    { Fl_Button* o = new Fl_Button(5, 550, 585, 25, "Quit Multi Agent Application");
       o->callback((Fl_Callback*)cb_Quit);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
+    { guiTextDisplayAgentsLog = new Fl_Text_Display(5, 100, 585, 445, "Application log");
+      guiTextDisplayAgentsLog->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+      Fl_Group::current()->resizable(guiTextDisplayAgentsLog);
+    } // Fl_Text_Display* guiTextDisplayAgentsLog
+    { guiSpinnerNodeID = new Fl_Spinner(555, 30, 35, 25, "Node ID");
+      guiSpinnerNodeID->minimum(0);
+      guiSpinnerNodeID->value(0);
+    } // Fl_Spinner* guiSpinnerNodeID
+    { guiSpinnerMCPItemID = new Fl_Spinner(555, 55, 35, 25, "MCP Item ID");
+      guiSpinnerMCPItemID->minimum(0);
+      guiSpinnerMCPItemID->value(0);
+    } // Fl_Spinner* guiSpinnerMCPItemID
+    { guiSpinnerMCPNodeID = new Fl_Spinner(435, 55, 35, 25, "MCP Node ID");
+      guiSpinnerMCPNodeID->minimum(0);
+      guiSpinnerMCPNodeID->value(0);
+    } // Fl_Spinner* guiSpinnerMCPNodeID
     guiWindowMultiagentApplication->end();
   } // Fl_Double_Window* guiWindowMultiagentApplication
   return guiWindowMultiagentApplication;
@@ -113,19 +133,24 @@ static void cb_Quit1(Fl_Button*, void*) {
   onGuiButtonQuitYellowPages();
 }
 
+Fl_Text_Display *guiTextDisplayYPLog=(Fl_Text_Display *)0;
+
 /**
  Main menu of the yellowpages application.
 */
 Fl_Double_Window* make_window_yellowpages_application() {
-  { guiWindowYellowPagesApplication = new Fl_Double_Window(190, 48, "SiSiMEX Multi Agent Application");
-    { Fl_Button* o = new Fl_Button(5, 5, 180, 25, "Quit Yellow Pages");
+  { guiWindowYellowPagesApplication = new Fl_Double_Window(594, 580, "SiSiMEX Yellow Pages Application");
+    { Fl_Button* o = new Fl_Button(5, 550, 585, 25, "Quit Yellow Pages");
       o->callback((Fl_Callback*)cb_Quit1);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
     { Fl_Group* o = new Fl_Group(5, 35, 180, 25);
       o->end();
-      Fl_Group::current()->resizable(o);
     } // Fl_Group* o
+    { guiTextDisplayYPLog = new Fl_Text_Display(5, 25, 585, 520, "Application log");
+      guiTextDisplayYPLog->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+      Fl_Group::current()->resizable(guiTextDisplayYPLog);
+    } // Fl_Text_Display* guiTextDisplayYPLog
     guiWindowYellowPagesApplication->end();
   } // Fl_Double_Window* guiWindowYellowPagesApplication
   return guiWindowYellowPagesApplication;

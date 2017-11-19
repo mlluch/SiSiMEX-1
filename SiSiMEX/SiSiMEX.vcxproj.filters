@@ -19,6 +19,12 @@
     <Filter Include="Archivos de origen\GUI">
       <UniqueIdentifier>{c492d639-05de-49b4-af2e-c748676788a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de origen\Agents">
+      <UniqueIdentifier>{218ac742-22ed-4e9c-a5c1-44d8d58f1bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Agents">
+      <UniqueIdentifier>{d8e175e1-0e9c-490d-96ce-544a1219abc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,19 +33,7 @@
     <ClCompile Include="YellowPages.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Agent.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="MCC.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="AgentManager.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiAgentSystem.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
@@ -48,14 +42,29 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="MCP.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\GUI.cxx">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\GUICallbacks.cpp">
       <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiAgentApplication.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Agent.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="AgentContainer.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="MCC.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="MCP.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,22 +75,10 @@
     <ClInclude Include="YellowPages.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Agent.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Packets.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="MCC.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="AgentManager.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiAgentSystem.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
@@ -90,17 +87,32 @@
     <ClInclude Include="Globals.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="MCP.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="MCCAddress.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\GUI.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\GUICallbacks.h">
       <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiAgentApplication.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Agent.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentContainer.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="MCC.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="MCCAddress.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="MCP.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

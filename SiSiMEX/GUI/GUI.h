@@ -12,7 +12,14 @@ extern Fl_Round_Button *radioButtonAgents;
 #include <FL/Fl_Button.H>
 Fl_Double_Window* make_window_select_mode();
 extern Fl_Double_Window *guiWindowMultiagentApplication;
+#include <FL/Fl_Text_Display.H>
+extern Fl_Text_Display *guiTextDisplayAgentsLog;
+#include <FL/Fl_Spinner.H>
+extern Fl_Spinner *guiSpinnerNodeID;
+extern Fl_Spinner *guiSpinnerMCPItemID;
+extern Fl_Spinner *guiSpinnerMCPNodeID;
 Fl_Double_Window* make_window_multiagents_application();
 extern Fl_Double_Window *guiWindowYellowPagesApplication;
+extern Fl_Text_Display *guiTextDisplayYPLog;
 Fl_Double_Window* make_window_yellowpages_application();
 #endif

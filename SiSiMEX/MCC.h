@@ -7,7 +7,7 @@ class MCC :
 {
 public:
 
-	MCC(uint16_t itemId);
+	MCC(Node *node, uint16_t itemId);
 	~MCC();
 
 	void update() override;

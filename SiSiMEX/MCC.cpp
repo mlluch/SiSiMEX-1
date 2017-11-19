@@ -1,6 +1,7 @@
 #include "MCC.h"
 #include "Globals.h"
 #include "Packets.h"
+#include "Log.h"
 #include <iostream>
 
 enum State
@@ -12,7 +13,8 @@ enum State
 	ST_FINISHED
 };
 
-MCC::MCC(uint16_t itemId) :
+MCC::MCC(Node *node, uint16_t itemId) :
+	Agent(node),
 	_itemId(itemId)
 {
 	setState(ST_INIT);
@@ -59,7 +61,7 @@ bool MCC::registerIntoYellowPages()
 	// Create listen socket
 	TCPSocketPtr agentSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
 	if (agentSocket == nullptr) {
-		std::cerr << "SocketUtil::CreateTCPSocket() failed" << std::endl;
+		eLog << "SocketUtil::CreateTCPSocket() failed";
 		return false;
 	}
 
@@ -67,7 +69,7 @@ bool MCC::registerIntoYellowPages()
 	SocketAddress yellowPagesAddress("localhost:8000");
 	int res = agentSocket->Connect(yellowPagesAddress);
 	if (res != NO_ERROR) {
-		std::cerr << "TCPSocket::Connect() failed" << std::endl;
+		eLog << "TCPSocket::Connect() failed";
 		return false;
 	}
 
@@ -103,7 +105,7 @@ void MCC::unregisterFromYellowPages()
 	// Create listen socket
 	TCPSocketPtr agentSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
 	if (agentSocket == nullptr) {
-		std::cerr << "SocketUtil::CreateTCPSocket() failed" << std::endl;
+		eLog << "SocketUtil::CreateTCPSocket() failed";
 		return;
 	}
 
@@ -111,7 +113,7 @@ void MCC::unregisterFromYellowPages()
 	SocketAddress yellowPagesAddress("localhost:8000");
 	int res = agentSocket->Connect(yellowPagesAddress);
 	if (res != NO_ERROR) {
-		std::cerr << "TCPSocket::Connect() failed" << std::endl;
+		eLog << "TCPSocket::Connect() failed";
 		return;
 	}
 

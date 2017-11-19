@@ -40,14 +40,14 @@ static const uint16_t NULL_AGENT_ID = 0;
 // Singletons //////////////////////////////////////////////////////////
 
 // Forward class declarations
-class AgentManager;
+class AgentContainer;
 class TCPNetworkManager;
 
 /**
  * Singleton.
- * Global access to the agent manager.
+ * Global access to the agent container.
  */
-extern AgentManager *g_AgentManager;
+extern AgentContainer *g_AgentContainer;
 
 /**
 * Singleton.

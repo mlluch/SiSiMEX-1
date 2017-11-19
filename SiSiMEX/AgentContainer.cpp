@@ -1,20 +1,20 @@
-#include "AgentManager.h"
+#include "AgentContainer.h"
 
 
-AgentManager::AgentManager()
+AgentContainer::AgentContainer()
 {
 }
 
-AgentManager::~AgentManager()
+AgentContainer::~AgentContainer()
 {
 }
 
-void AgentManager::addAgent(AgentPtr agent)
+void AgentContainer::addAgent(AgentPtr agent)
 {
 	_agents.push_back(agent);
 }
 
-AgentPtr AgentManager::getAgent(int agentId)
+AgentPtr AgentContainer::getAgent(int agentId)
 {
 	// Agent search
 	for (auto agent : _agents) {
@@ -26,12 +26,12 @@ AgentPtr AgentManager::getAgent(int agentId)
 	return nullptr;
 }
 
-bool AgentManager::empty() const
+bool AgentContainer::empty() const
 {
 	return _agents.empty();
 }
 
-void AgentManager::update()
+void AgentContainer::update()
 {
 	// Track alive agents
 	std::vector<AgentPtr> agentsAlive;
@@ -51,7 +51,7 @@ void AgentManager::update()
 	_agents.swap(agentsAlive);
 }
 
-void AgentManager::finalize()
+void AgentContainer::finalize()
 {
 	// Update all agents
 	for (auto agent : _agents) {

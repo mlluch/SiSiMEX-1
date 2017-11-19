@@ -1,6 +1,4 @@
 #include <iostream>
-#include "YellowPages.h"
-#include "MultiAgentSystem.h"
 #include "GUI/GUI.h"
 
 int WinMain(HINSTANCE hInstance,

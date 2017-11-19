@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Packets.h"
 #include "Agent.h"
+#include "Log.h"
 #include <Net.h>
 #include <iostream>
 
@@ -24,25 +25,25 @@ YellowPages::~YellowPages()
 
 bool YellowPages::initialize()
 {
-	std::cout << "-------------------------------------------------------------" << std::endl;
-	std::cout << "                   SiSiMEX: Yellow Pages                     " << std::endl;
-	std::cout << "-------------------------------------------------------------" << std::endl;
-	std::cout << std::endl;
+	iLog << "-------------------------------------------------------------";
+	iLog << "                   SiSiMEX: Yellow Pages                     ";
+	iLog << "-------------------------------------------------------------";
+	iLog << "";
 
 	// Initialize sockets library
 	int res;
 	if (!SocketUtil::StaticInit()) {
-		std::cout << "SocketUtil::StaticInit() failed" << std::endl;
+		eLog << "SocketUtil::StaticInit() failed";
 		return false;
 	}
 
 	// Create listen socket
 	TCPSocketPtr listenSocket = SocketUtil::CreateTCPSocket(SocketAddressFamily::INET);
 	if (listenSocket == nullptr) {
-		std::cerr << "SocketUtil::CreateTCPSocket() failed" << std::endl;
+		eLog << "SocketUtil::CreateTCPSocket() failed";
 		return false;
 	}
-	std::cout << " - Server Listen socket created" << std::endl;
+	iLog << " - Server Listen socket created";
 
 	// Bind
 	const int port = LISTEN_PORT_YP;
@@ -50,12 +51,12 @@ bool YellowPages::initialize()
 	listenSocket->SetReuseAddress(true);
 	res = listenSocket->Bind(bindAddress);
 	if (res != NO_ERROR) { return false; }
-	std::cout << " - Socket Bind to interface 127.0.0.1:" << LISTEN_PORT_YP << std::endl;
+	iLog << " - Socket Bind to interface 127.0.0.1:" << LISTEN_PORT_YP;
 
 	// Listen mode
 	res = listenSocket->Listen();
 	if (res != NO_ERROR) { return false; }
-	std::cout << " - Socket entered in Listen state..." << std::endl;
+	iLog << " - Socket entered in Listen state...";
 
 	// Add the socket to the manager
 	_networkManager.AddSocket(listenSocket);
@@ -65,7 +66,7 @@ bool YellowPages::initialize()
 
 void YellowPages::update()
 {
-	const int timeoutMillis = 100;
+	const int timeoutMillis = 30;
 	_networkManager.HandleIncomingPackets(timeoutMillis);
 
 	_networkManager.HandleOutgoingPackets();
@@ -83,7 +84,7 @@ void YellowPages::OnAccepted(TCPSocketPtr socket)
 
 void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &stream)
 {
-	std::cout << "OnPacketReceived: " << std::endl;
+	iLog << "OnPacketReceived: ";
 
 	// Read packet header
 	PacketHeader inPacketHead;
@@ -91,7 +92,7 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 
 	if (inPacketHead.packetType == PacketType::RegisterMCC)
 	{
-		std::cout << "PacketType::RegisterMCC" << std::endl;
+		iLog << "PacketType::RegisterMCC";
 
 		// Read the packet
 		PacketRegisterMCC inPacketData;
@@ -107,9 +108,9 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 		// Host address
 		std::string hostAddress = socket->RemoteAddress().GetString();
 
-		std::cout << " - MCC Agent ID: " << inPacketHead.srcAgentId << std::endl;
-		std::cout << " - Contributed Item ID: " << inPacketData.itemId << std::endl;
-		std::cout << " - Remote host address: " << hostAddress << std::endl;
+		iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
+		iLog << " - Contributed Item ID: " << inPacketData.itemId;
+		iLog << " - Remote host address: " << hostAddress;
 
 		// Send RegisterMCCAck packet
 		OutputMemoryStream outStream;
@@ -121,7 +122,7 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 	}
 	else if (inPacketHead.packetType == PacketType::UnregisterMCC)
 	{
-		std::cout << "PacketType::UnregisterMCC" << std::endl;
+		iLog << "PacketType::UnregisterMCC";
 
 		// Read the packet
 		PacketUnregisterMCC inPacketData;
@@ -139,8 +140,8 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 			}
 		}
 
-		std::cout << " - MCC Agent ID: " << inPacketHead.srcAgentId << std::endl;
-		std::cout << " - Contributed Item ID: " << inPacketData.itemId << std::endl;
+		iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
+		iLog << " - Contributed Item ID: " << inPacketData.itemId;
 
 		// Send RegisterMCCAck packet
 		OutputMemoryStream outStream;
@@ -152,7 +153,7 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 	}
 	else if (inPacketHead.packetType == PacketType::QueryMCCsForItem)
 	{
-		std::cout << "PacketType::QueryMCCsForItem" << std::endl;
+		iLog << "PacketType::QueryMCCsForItem";
 		
 		// Read packet
 		PacketQueryMCCsForItem inPacketData;

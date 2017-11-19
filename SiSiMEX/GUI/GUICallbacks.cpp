@@ -1,14 +1,36 @@
-#include "GUICallbacks.h"
 #include "../YellowPages.h"
-#include "../MultiAgentSystem.h"
+#include "../MultiAgentApplication.h"
+#include "../Log.h"
+#include "GUICallbacks.h"
 #include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
-// YellowPages
+// Singletons
 ////////////////////////////////////////////////////////////////////////////////
 
 YellowPages *g_YellowPages = nullptr;
-MultiAgentSystem *g_MultiAgentApp = nullptr;
+MultiAgentApplication *g_MultiAgentApp = nullptr;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LogOutputs
+////////////////////////////////////////////////////////////////////////////////
+
+class AgentsLogOutput : public LogOutput {
+public:
+	void writeMessage(const std::string &message) override {
+		guiTextDisplayAgentsLog->insert_position(guiTextDisplayAgentsLog->buffer()->length());
+		guiTextDisplayAgentsLog->insert( message.c_str());
+	}
+} agentsLogOutput;
+
+class YellowPagesLogOutput : public LogOutput {
+public:
+	void writeMessage(const std::string &message) override {
+		guiTextDisplayYPLog->insert_position(guiTextDisplayYPLog->buffer()->length());
+		guiTextDisplayYPLog->insert(message.c_str());
+	}
+} yellowPagesLogOutput;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,10 +48,14 @@ void multiagentsApplicationInitialize()
 	Fl_Window *w = make_window_multiagents_application();
 	w->show();
 
+	Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+	guiTextDisplayAgentsLog->buffer(buff);
+	g_Log.addOutput(&agentsLogOutput);
+
 	Fl::add_idle(&multiagentsApplicationUpdate, nullptr);
 	Fl::set_atclose(&multiagentsApplicationFinalize);
 
-	g_MultiAgentApp = new MultiAgentSystem();
+	g_MultiAgentApp = new MultiAgentApplication();
 	g_MultiAgentApp->initialize();
 }
 
@@ -53,6 +79,10 @@ void yellowPagesApplicationInitialize()
 {
 	Fl_Window *w = make_window_yellowpages_application();
 	w->show();
+
+	Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+	guiTextDisplayYPLog->buffer(buff);
+	g_Log.addOutput(&yellowPagesLogOutput);
 
 	Fl::add_idle(&yellowPagesApplicationUpdate, nullptr);
 	Fl::set_atclose(&yellowPagesApplicationFinalize);
@@ -109,17 +139,20 @@ void onguiButtonStartApplication()
 
 void onGuiButtonListLocalNodes()
 {
-	std::cout << "List Local Nodes" << std::endl;
+	g_MultiAgentApp->listLocalNodes();
 }
 
 void onGuiButtonInspectLocalNode()
 {
-	std::cout << "Inspect Local Node" << std::endl;
+	int nodeId = guiSpinnerNodeID->value();
+	g_MultiAgentApp->inspectLocalNode(nodeId);
 }
 
 void onguiButtonGetContributorsForItem()
 {
-	std::cout << "Contributors For Item" << std::endl;
+	int nodeId = guiSpinnerMCPNodeID->value();
+	int itemId = guiSpinnerMCPItemID->value();
+	g_MultiAgentApp->spawnMCP(nodeId, itemId);
 }
 
 void onGuiButtonQuitMultiagentApplication()

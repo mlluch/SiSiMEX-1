@@ -2,11 +2,12 @@
 #include "Agent.h"
 #include <vector>
 
-class AgentManager
+class AgentContainer
 {
 public:
-	AgentManager();
-	~AgentManager();
+
+	AgentContainer();
+	~AgentContainer();
 
 	// Setters
 	void addAgent(AgentPtr agent);
