@@ -48,6 +48,9 @@ private:
 
 public:
 
+	/** It returns the parent node of the agent. */
+	Node *node() const { return _node; }
+
 	/** It returns the identifier of the agent (within the host) */
 	uint16_t id() const { return _id; }
 

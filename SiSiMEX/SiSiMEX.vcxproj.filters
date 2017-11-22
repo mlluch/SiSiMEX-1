@@ -66,6 +66,12 @@
     <ClCompile Include="MCP.cpp">
       <Filter>Archivos de origen\Agents</Filter>
     </ClCompile>
+    <ClCompile Include="UCC.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="UCP.cpp">
+      <Filter>Archivos de origen\Agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Net\Net.vcxproj" />
@@ -112,6 +118,12 @@
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
     <ClInclude Include="MCCRegister.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="UCC.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="UCP.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
   </ItemGroup>

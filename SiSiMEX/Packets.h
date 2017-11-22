@@ -9,12 +9,22 @@
  */
 enum class PacketType
 {
+	// MCC <-> YP
 	RegisterMCC,
 	RegisterMCCAck,
 	UnregisterMCC,
 	UnregisterMCCAck,
+	// MCP <-> YP
 	QueryMCCsForItem,
 	ReturnMCCsForItem,
+	// MCP <-> MCC
+	StartNegotiation,
+	StartNegotiationResponse,
+	// UCP <-> UCC
+	RequestItem,
+	RequestItemResponse,
+	SendItem,
+	SendItemResponse,
 	Last
 };
 

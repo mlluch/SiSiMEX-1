@@ -136,6 +136,8 @@
     <ClCompile Include="MultiAgentApplication.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="UCC.cpp" />
+    <ClCompile Include="UCP.cpp" />
     <ClCompile Include="YellowPages.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,8 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Packets.h" />
+    <ClInclude Include="UCC.h" />
+    <ClInclude Include="UCP.h" />
     <ClInclude Include="YellowPages.h" />
   </ItemGroup>
   <ItemGroup>
