@@ -117,13 +117,13 @@
     <ClInclude Include="MCP.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
-    <ClInclude Include="MCCRegister.h">
-      <Filter>Archivos de encabezado\Agents</Filter>
-    </ClInclude>
     <ClInclude Include="UCC.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
     <ClInclude Include="UCP.h">
+      <Filter>Archivos de encabezado\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="AgentLocation.h">
       <Filter>Archivos de encabezado\Agents</Filter>
     </ClInclude>
   </ItemGroup>

@@ -51,18 +51,19 @@ void ItemList::randomInitialization()
 
 void ItemList::addItem(const Item &item)
 {
-	_items.push_back(item);
+	if (item.id() != NULL_ITEM_ID) {
+		_items.push_back(item);
+	}
 }
 
 void ItemList::removeItem(int itemId)
 {
-	bool removed = false;
-	for (auto it = _items.begin(); it != _items.end() && !removed; ++it)
+	for (auto it = _items.begin(); it != _items.end(); ++it)
 	{
 		const Item &item(*it);
 		if (item.id() == itemId) {
 			_items.erase(it);
-			removed = true;
+			break;
 		}
 	}
 }

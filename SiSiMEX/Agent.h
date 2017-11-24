@@ -31,6 +31,7 @@ public:
 
 	// Packet send functions
 	bool sendPacketToYellowPages(OutputMemoryStream &stream);
+	bool sendPacketToHost(const std::string &ip, uint16_t port, OutputMemoryStream &stream);
 
 	// Function called from MultiAgentApplication to forward packets received from the network
 	virtual void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) = 0;

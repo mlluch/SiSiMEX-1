@@ -19,6 +19,9 @@ public:
 	// Update
 	void update();
 
+	// Post update
+	void postUpdate();
+
 	// Finalize
 	void finalize();
 

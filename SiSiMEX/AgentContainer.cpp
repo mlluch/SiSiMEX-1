@@ -33,14 +33,21 @@ bool AgentContainer::empty() const
 
 void AgentContainer::update()
 {
+	// Update all agents
+	for (auto agent : _agents)
+	{
+		agent->update();
+	}
+}
+
+void AgentContainer::postUpdate()
+{
 	// Track alive agents
 	std::vector<AgentPtr> agentsAlive;
 
 	// Update all agents
 	for (auto agent : _agents)
 	{
-		agent->update();
-
 		// Keep track of alive agents
 		if (!agent->finished()) {
 			agentsAlive.push_back(agent);

@@ -99,7 +99,7 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 		inPacketData.Read(stream);
 
 		// Register the MCC into the yellow pages
-		MCCRegister mcc;
+		AgentLocation mcc;
 		mcc.hostIP = socket->RemoteAddress().GetIPString();
 		mcc.hostPort = LISTEN_PORT_AGENTS;
 		mcc.agentId = inPacketHead.srcAgentId;
@@ -129,7 +129,7 @@ void YellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &strea
 		inPacketData.Read(stream);
 
 		// Unregister the MCC from the yellow pages
-		std::list<MCCRegister> &mccs(_mccByItem[inPacketData.itemId]);
+		std::list<AgentLocation> &mccs(_mccByItem[inPacketData.itemId]);
 		for (auto it = mccs.begin(); it != mccs.end();) {
 			if (it->agentId == inPacketHead.srcAgentId) {
 				auto oldIt = it++;

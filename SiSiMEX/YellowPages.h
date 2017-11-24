@@ -1,5 +1,5 @@
 #pragma once
-#include "MCCRegister.h"
+#include "AgentLocation.h"
 #include <Net.h>
 #include<map>
 
@@ -25,6 +25,6 @@ private:
 
 	TCPNetworkManager _networkManager; /**< The network manager. */
 
-	std::map<uint16_t, std::list<MCCRegister> > _mccByItem; /**< MCCs accessed by item id. */
+	std::map<uint16_t, std::list<AgentLocation> > _mccByItem; /**< MCCs accessed by item id. */
 };
 

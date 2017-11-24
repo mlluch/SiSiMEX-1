@@ -15,9 +15,17 @@ public:
 
 	void OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream) override;
 
+	// Whether or not the negotiation finished
+	bool negotiationFinished() const;
+
+	// Whether ir not there was a negotiation agreement
+	bool negotiationAgreement() const;
+
 private:
 
 	uint16_t _contributedItemId; /**< The contributed item. */
 	uint16_t _constraintItemId; /**< The constraint item. */
+
+	bool _negotiationAgreement; /**< Was there a negotiation agreement? */
 };
 

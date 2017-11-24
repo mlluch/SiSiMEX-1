@@ -10,13 +10,13 @@ enum State
 	ST_ITERATING_OVER_MCCs,
 	ST_STARTING_NEGOTIATION,
 	ST_NEGOTIATING,
-	ST_PROVIDING_RESULTS,
-	ST_FINISHING
+	ST_NEGOTIATION_FINISHED
 };
 
 MCP::MCP(Node *node, uint16_t itemId) :
 	Agent(node),
-	_itemId(itemId)
+	_itemId(itemId),
+	_negotiationAgreement(false)
 {
 	setState(ST_INIT);
 }
@@ -27,80 +27,45 @@ MCP::~MCP()
 
 void MCP::update()
 {
-	if (state() == ST_INIT) {
+	switch (state())
+	{
+	case ST_INIT:
 		queryMCCsForItem(_itemId);
 		setState(ST_REQUESTING_MCCs);
-	}
-	else if (state() == ST_REQUESTING_MCCs) {
-		// Handled from OnPacketReceived
-	}
-	else if (state() == ST_ITERATING_OVER_MCCs) {
+		break;
+	case ST_ITERATING_OVER_MCCs:
 		if (_mccRegisterIndex < _mccRegisters.size())
 		{
-			// TODO: Send MCC a negotiation request
-
+			const AgentLocation &mccRegister(_mccRegisters[_mccRegisterIndex]);
+			sendNegotiationRequest(mccRegister);
 			setState(ST_STARTING_NEGOTIATION);
 		}
 		else
 		{
-			setState(ST_PROVIDING_RESULTS);
+			setState(ST_NEGOTIATION_FINISHED);
 		}
-	}
-	else if (state() == ST_NEGOTIATING) {
-		// if _ucp->negotiationFinished then
-		//     if _ucp->agree then
-		//         collect _ucc->constraint
-		//         setState(ST_UNREGISTERING);
-		//     else
-		//         setState(ST_IDLE);
-		//     endif
-		//     _ucc.reset();
-		// endif
-	}
-	else if (state() == ST_PROVIDING_RESULTS) {
-		// TODO: Finish when the results are provided
-	}
-	else if (state() == ST_FINISHING) {
-		finish();
+		break;
+	case ST_NEGOTIATING:
+		if (_ucp->negotiationFinished()) {
+			if (_ucp->negotiationAgreement()) {
+				_negotiationAgreement = true;
+				setState(ST_NEGOTIATION_FINISHED);
+			}
+			else {
+				_mccRegisterIndex++;
+				setState(ST_ITERATING_OVER_MCCs);
+			}
+			destroyChildUCP();
+		}
+		break;
+	default:;
 	}
 }
 
 void MCP::finalize()
 {
-
-}
-
-bool MCP::queryMCCsForItem(int itemId)
-{
-	// Create message header and data
-	PacketHeader packetHead;
-	packetHead.packetType = PacketType::QueryMCCsForItem;
-	packetHead.srcAgentId = id();
-	packetHead.dstAgentId = -1;
-	PacketQueryMCCsForItem packetData;
-	packetData.itemId = _itemId;
-
-	// Serialize message
-	OutputMemoryStream stream;
-	packetHead.Write(stream);
-	packetData.Write(stream);
-
-	// 1) Ask YP for MCC hosting the item 'itemId'
-	return sendPacketToYellowPages(stream);
-}
-
-
-void MCP::createChildUCP()
-{
-	_ucp.reset(new UCP(node(), _itemId));
-	g_AgentContainer->addAgent(_ucp);
-}
-
-void MCP::destroyChildUCP()
-{
-	// Make sure we call this function when the agent has
-	// finished so it is destroyed by the AgentContainer
-	_ucp.reset();
+	destroyChildUCP();
+	finish();
 }
 
 void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
@@ -133,12 +98,83 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	}
 	else if (state() == ST_STARTING_NEGOTIATION && packetType == PacketType::StartNegotiationResponse)
 	{
+		PacketStartNegotiationResponse iPacketData;
+		iPacketData.Read(stream);
+
 		// Create UCP to achieve the constraint item
-		createChildUCP();
+		AgentLocation uccLoc;
+		uccLoc.hostIP = socket->RemoteAddress().GetIPString();
+		uccLoc.hostPort = LISTEN_PORT_AGENTS;
+		uccLoc.agentId = iPacketData.uccAgentId;
+		createChildUCP(uccLoc);
 
 		// Wait for UCP results
 		setState(ST_NEGOTIATING);
 
 		socket->Disconnect();
+	}
+}
+
+bool MCP::negotiationFinished() const
+{
+	return state() == ST_NEGOTIATION_FINISHED;
+}
+
+bool MCP::negotiationAgreement() const
+{
+	return _negotiationAgreement;
+}
+
+
+bool MCP::queryMCCsForItem(int itemId)
+{
+	// Create message header and data
+	PacketHeader packetHead;
+	packetHead.packetType = PacketType::QueryMCCsForItem;
+	packetHead.srcAgentId = id();
+	packetHead.dstAgentId = -1;
+	PacketQueryMCCsForItem packetData;
+	packetData.itemId = _itemId;
+
+	// Serialize message
+	OutputMemoryStream stream;
+	packetHead.Write(stream);
+	packetData.Write(stream);
+
+	// 1) Ask YP for MCC hosting the item 'itemId'
+	return sendPacketToYellowPages(stream);
+}
+
+bool MCP::sendNegotiationRequest(const AgentLocation &mccRegister)
+{
+	const std::string &hostIP = mccRegister.hostIP;
+	const uint16_t hostPort = mccRegister.hostPort;
+	const uint16_t agentId = mccRegister.agentId;
+
+	PacketHeader packetHead;
+	packetHead.packetType = PacketType::StartNegotiation;
+	packetHead.srcAgentId = id();
+	packetHead.dstAgentId = mccRegister.agentId;
+
+	OutputMemoryStream stream;
+	packetHead.Write(stream);
+
+	return sendPacketToHost(hostIP, hostPort, stream);
+}
+
+void MCP::createChildUCP(const AgentLocation &uccLoc)
+{
+	destroyChildUCP();
+	_ucp.reset(new UCP(node(), _itemId, uccLoc));
+	g_AgentContainer->addAgent(_ucp);
+}
+
+void MCP::destroyChildUCP()
+{
+	// Make sure we call this function when the agent has
+	// finished so it is destroyed by the AgentContainer
+	if (_ucp.get()) {
+		_ucp->finalize();
+		_ucp.reset();
 	}
 }

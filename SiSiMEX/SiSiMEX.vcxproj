@@ -152,7 +152,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MCC.h" />
-    <ClInclude Include="MCCRegister.h" />
+    <ClInclude Include="AgentLocation.h" />
     <ClInclude Include="MCP.h" />
     <ClInclude Include="MultiAgentApplication.h" />
     <ClInclude Include="Globals.h" />

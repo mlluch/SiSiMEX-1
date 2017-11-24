@@ -1,6 +1,6 @@
 #pragma once
 #include "Globals.h"
-#include "MCCRegister.h"
+#include "AgentLocation.h"
 
 /**
  * Enumerated type for packets.
@@ -23,8 +23,8 @@ enum class PacketType
 	// UCP <-> UCC
 	RequestItem,
 	RequestItemResponse,
-	SendItem,
-	SendItemResponse,
+	SendConstraint,
+	SendConstraintResponse,
 	Last
 };
 
@@ -89,7 +89,7 @@ using PacketQueryMCCsForItem = PacketRegisterMCC;
  */
 class PacketReturnMCCsForItem {
 public:
-	std::vector<MCCRegister> mccAddresses;
+	std::vector<AgentLocation> mccAddresses;
 	void Read(InputMemoryStream &stream) {
 		uint16_t count;
 		stream.Read(count);
@@ -105,4 +105,62 @@ public:
 			mccAddress.Write(stream);
 		}
 	}
+};
+
+// MCP <-> MCC
+
+class PacketStartNegotiation {
+public:
+	// This packet has nothing
+};
+
+class PacketStartNegotiationResponse {
+public:
+	uint16_t uccAgentId;
+	void Read(InputMemoryStream &stream) {
+		stream.Read(uccAgentId);
+	}
+	void Write(OutputMemoryStream &stream) {
+		stream.Write(uccAgentId);
+	}
+};
+
+// UCP <-> UCC
+
+class PacketRequestItem {
+public:
+	uint16_t requestedItemId;
+	void Read(InputMemoryStream &stream) {
+		stream.Read(requestedItemId);
+	}
+	void Write(OutputMemoryStream &stream) {
+		stream.Write(requestedItemId);
+	}
+};
+
+class PacketRequestItemResponse {
+public:
+	uint16_t constraintItemId;
+	void Read(InputMemoryStream &stream) {
+		stream.Read(constraintItemId);
+	}
+	void Write(OutputMemoryStream &stream) {
+		stream.Write(constraintItemId);
+	}
+};
+
+class PacketSendConstraint {
+public:
+	uint16_t constraintItemId;
+	void Read(InputMemoryStream &stream) {
+		stream.Read(constraintItemId);
+	}
+	void Write(OutputMemoryStream &stream) {
+		stream.Write(constraintItemId);
+	}
+};
+
+class PacketSendConstraintResponse {
+public:
+	// This packet has nothing
 };

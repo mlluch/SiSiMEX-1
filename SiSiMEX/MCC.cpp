@@ -8,13 +8,15 @@ enum State
 	ST_REGISTERING,
 	ST_IDLE,
 	ST_NEGOTIATING,
+	ST_NEGOTIATION_FINISHED,
 	ST_UNREGISTERING,
 	ST_FINISHED
 };
 
-MCC::MCC(Node *node, uint16_t itemId) :
+MCC::MCC(Node *node, uint16_t contributedItemId, uint16_t constraintItemId) :
 	Agent(node),
-	_contributedItemId(itemId)
+	_contributedItemId(contributedItemId),
+	_constraintItemId(constraintItemId)
 {
 	setState(ST_INIT);
 }
@@ -39,15 +41,14 @@ void MCC::update()
 		// See OnPacketReceived()
 		break;
 	case ST_NEGOTIATING:
-		// if _ucc->negotiationFinished then
-		//     if _ucc->agree then
-		//         collect _ucc->constraint
-		//         setState(ST_UNREGISTERING);
-		//     else
-		//         setState(ST_WAITING_NEGOTIATION_REQUEST);
-		//     endif
-		//     _ucc.reset();
-		// endif
+		if (_ucc->negotiationFinished()) {
+			if (_ucc->negotiationAgreement()) {
+				setState(ST_NEGOTIATION_FINISHED);
+			} else {
+				setState(ST_IDLE);
+			}
+			destroyChildUCC();
+		}
 		break;
 	case ST_UNREGISTERING:
 		// See OnPacketReceived()
@@ -59,10 +60,58 @@ void MCC::update()
 
 void MCC::finalize()
 {
+	destroyChildUCC();
 	unregisterFromYellowPages();
 	setState(ST_UNREGISTERING);
 }
 
+
+void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
+{
+	const PacketType packetType = packetHeader.packetType;
+	if (state() == ST_REGISTERING && packetType == PacketType::RegisterMCCAck) {
+		setState(ST_IDLE);
+		socket->Disconnect();
+	}
+	else if (state() == ST_IDLE && packetType == PacketType::StartNegotiation) {
+
+		// Create UCC
+		createChildUCC();
+
+		// Send negotiation response
+		PacketHeader oPacketHead;
+		oPacketHead.packetType = PacketType::StartNegotiationResponse;
+		oPacketHead.srcAgentId = id();
+		oPacketHead.dstAgentId = packetHeader.srcAgentId;
+
+		PacketStartNegotiationResponse oPacketData;
+		oPacketData.uccAgentId = _ucc->id();
+
+		OutputMemoryStream ostream;
+		oPacketHead.Write(ostream);
+		oPacketData.Write(ostream);
+
+		const std::string ip = socket->RemoteAddress().GetIPString();
+		uint16_t port = LISTEN_PORT_AGENTS;
+		sendPacketToHost(ip, port, ostream);
+
+		setState(ST_NEGOTIATING);
+	}
+	else if (state() == ST_UNREGISTERING && packetType == PacketType::UnregisterMCCAck) {
+		setState(ST_FINISHED);
+		socket->Disconnect();
+	}
+}
+
+bool MCC::negotiationFinished() const
+{
+	return state() == ST_NEGOTIATION_FINISHED;
+}
+
+bool MCC::negotiationAgreement() const
+{
+	return state() == ST_NEGOTIATION_FINISHED;
+}
 
 bool MCC::registerIntoYellowPages()
 {
@@ -112,31 +161,8 @@ void MCC::destroyChildUCC()
 {
 	// Make sure we call this function when the agent has
 	// finished so it is destroyed by the AgentContainer
-	_ucc.reset();
-}
-
-void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader, InputMemoryStream &stream)
-{
-	const PacketType packetType = packetHeader.packetType;
-	if (state() == ST_REGISTERING && packetType == PacketType::RegisterMCCAck) {
-		setState(ST_IDLE);
-		socket->Disconnect();
-	}
-	if (state() == ST_IDLE && packetType == PacketType::StartNegotiation) {
-		// Create UCC
-		createChildUCC();
-
-		// Ask UCC to start a negotiation
-		// TODO: Or maybe simply because it is created it works...
-
-		// Send negotiation response
-		// TODO: PacketType::MCCNegotiationResponse
-		//       include UCC agent Id _ucc->id();
-
-		setState(ST_NEGOTIATING);
-	}
-	if (state() == ST_UNREGISTERING && packetType == PacketType::UnregisterMCCAck) {
-		setState(ST_FINISHED);
-		socket->Disconnect();
+	if (_ucc.get()) {
+		_ucc->finalize();
+		_ucc.reset();
 	}
 }
