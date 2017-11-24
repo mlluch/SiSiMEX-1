@@ -36,7 +36,9 @@ void AgentContainer::update()
 	// Update all agents
 	for (auto agent : _agents)
 	{
-		agent->update();
+		if (!agent->finished()) {
+			agent->update();
+		}
 	}
 }
 

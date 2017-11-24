@@ -16,6 +16,9 @@ public:
 	void update();
 	void finalize();
 
+	// Clear
+	void clear();
+
 	// TCPNetworkManagerDelegate methods
 	void OnAccepted(TCPSocketPtr socket) override;
 	void OnPacketReceived(TCPSocketPtr socket, InputMemoryStream &stream) override;

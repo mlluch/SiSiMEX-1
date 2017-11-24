@@ -150,7 +150,16 @@ void onGuiButtonInspectLocalNode()
 	g_MultiAgentApp->inspectLocalNode(nodeId);
 }
 
-void onguiButtonGetContributorsForItem()
+void onguiButtonSpawnMCC()
+{
+	int nodeId = static_cast<int>(guiSpinnerMCCNodeID->value());
+	int contributedItemId = static_cast<int>(guiSpinnerMCCContributedItemID->value());
+	int constraintItemId = static_cast<int>(guiSpinnerMCCConstraintItemID->value());
+	if (constraintItemId == -1) { constraintItemId = NULL_ITEM_ID; }
+	g_MultiAgentApp->spawnMCC(nodeId, contributedItemId, constraintItemId);
+}
+
+void onguiButtonSpawnMCP()
 {
 	int nodeId = static_cast<int>(guiSpinnerMCPNodeID->value());
 	int itemId = static_cast<int>(guiSpinnerMCPItemID->value());
@@ -165,6 +174,11 @@ void onGuiButtonQuitMultiagentApplication()
 ////////////////////////////////////////////////////////////////////////////////
 // YellowPages application
 ////////////////////////////////////////////////////////////////////////////////
+
+void onguiButtonClearYellowPages()
+{
+	g_YellowPages->clear();
+}
 
 void onGuiButtonQuitYellowPages()
 {

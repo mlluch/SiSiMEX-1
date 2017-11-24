@@ -15,7 +15,8 @@ void onguiButtonStartApplication();
 
 void onGuiButtonListLocalNodes();
 void onGuiButtonInspectLocalNode();
-void onguiButtonGetContributorsForItem();
+void onguiButtonSpawnMCC();
+void onguiButtonSpawnMCP();
 void onGuiButtonQuitMultiagentApplication();
 
 
@@ -23,4 +24,5 @@ void onGuiButtonQuitMultiagentApplication();
 // Yellow Pages application
 ////////////////////////////////////////////////////////////////////////////////
 
+void onguiButtonClearYellowPages();
 void onGuiButtonQuitYellowPages();

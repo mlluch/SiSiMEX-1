@@ -77,6 +77,12 @@ void YellowPages::finalize()
 	SocketUtil::CleanUp();
 }
 
+void YellowPages::clear()
+{
+	iLog << "All MCCs were removed from the registry...";
+	_mccByItem.clear();
+}
+
 void YellowPages::OnAccepted(TCPSocketPtr socket)
 {
 	//std::cout << "OnAccepted" << std::endl;

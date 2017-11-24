@@ -69,7 +69,7 @@ static void cb_Inspect(Fl_Button*, void*) {
 }
 
 static void cb_Spawn(Fl_Button*, void*) {
-  onguiButtonGetContributorsForItem();
+  onguiButtonSpawnMCP();
 }
 
 static void cb_Quit(Fl_Button*, void*) {
@@ -83,6 +83,16 @@ Fl_Spinner *guiSpinnerNodeID=(Fl_Spinner *)0;
 Fl_Spinner *guiSpinnerMCPItemID=(Fl_Spinner *)0;
 
 Fl_Spinner *guiSpinnerMCPNodeID=(Fl_Spinner *)0;
+
+static void cb_Spawn1(Fl_Button*, void*) {
+  onguiButtonSpawnMCC();
+}
+
+Fl_Spinner *guiSpinnerMCCNodeID=(Fl_Spinner *)0;
+
+Fl_Spinner *guiSpinnerMCCContributedItemID=(Fl_Spinner *)0;
+
+Fl_Spinner *guiSpinnerMCCConstraintItemID=(Fl_Spinner *)0;
 
 /**
  Main menu of the multi-agents application.
@@ -98,7 +108,7 @@ Fl_Double_Window* make_window_multiagents_application() {
       o->callback((Fl_Callback*)cb_Inspect);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { Fl_Button* o = new Fl_Button(5, 55, 340, 25, "Spawn MCP");
+    { Fl_Button* o = new Fl_Button(5, 55, 370, 25, "Spawn MCP");
       o->callback((Fl_Callback*)cb_Spawn);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
@@ -106,7 +116,7 @@ Fl_Double_Window* make_window_multiagents_application() {
       o->callback((Fl_Callback*)cb_Quit);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { guiTextDisplayAgentsLog = new Fl_Text_Display(5, 100, 585, 445, "Application log");
+    { guiTextDisplayAgentsLog = new Fl_Text_Display(5, 125, 585, 420, "Application log");
       guiTextDisplayAgentsLog->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       Fl_Group::current()->resizable(guiTextDisplayAgentsLog);
     } // Fl_Text_Display* guiTextDisplayAgentsLog
@@ -114,14 +124,35 @@ Fl_Double_Window* make_window_multiagents_application() {
       guiSpinnerNodeID->minimum(0);
       guiSpinnerNodeID->value(0);
     } // Fl_Spinner* guiSpinnerNodeID
-    { guiSpinnerMCPItemID = new Fl_Spinner(555, 55, 35, 25, "MCP Item ID");
+    { guiSpinnerMCPItemID = new Fl_Spinner(555, 55, 35, 25, "Requested");
+      guiSpinnerMCPItemID->tooltip("Requested Item ID");
       guiSpinnerMCPItemID->minimum(0);
       guiSpinnerMCPItemID->value(0);
     } // Fl_Spinner* guiSpinnerMCPItemID
-    { guiSpinnerMCPNodeID = new Fl_Spinner(435, 55, 35, 25, "MCP Node ID");
+    { guiSpinnerMCPNodeID = new Fl_Spinner(435, 55, 35, 25, "Node ID");
+      guiSpinnerMCPNodeID->tooltip("Node on which the agent will be spawn");
       guiSpinnerMCPNodeID->minimum(0);
       guiSpinnerMCPNodeID->value(0);
     } // Fl_Spinner* guiSpinnerMCPNodeID
+    { Fl_Button* o = new Fl_Button(5, 80, 245, 25, "Spawn MCC");
+      o->callback((Fl_Callback*)cb_Spawn1);
+      o->align(Fl_Align(FL_ALIGN_CLIP));
+    } // Fl_Button* o
+    { guiSpinnerMCCNodeID = new Fl_Spinner(310, 80, 35, 25, "Node ID");
+      guiSpinnerMCCNodeID->tooltip("Node on which the agent will be spawn");
+      guiSpinnerMCCNodeID->minimum(0);
+      guiSpinnerMCCNodeID->value(0);
+    } // Fl_Spinner* guiSpinnerMCCNodeID
+    { guiSpinnerMCCContributedItemID = new Fl_Spinner(435, 80, 35, 25, "Contributed");
+      guiSpinnerMCCContributedItemID->tooltip("Contributed Item ID");
+      guiSpinnerMCCContributedItemID->minimum(0);
+      guiSpinnerMCCContributedItemID->value(0);
+    } // Fl_Spinner* guiSpinnerMCCContributedItemID
+    { guiSpinnerMCCConstraintItemID = new Fl_Spinner(555, 80, 35, 25, "Constraint");
+      guiSpinnerMCCConstraintItemID->tooltip("Constraint Item ID");
+      guiSpinnerMCCConstraintItemID->minimum(-1);
+      guiSpinnerMCCConstraintItemID->value(-1);
+    } // Fl_Spinner* guiSpinnerMCCConstraintItemID
     guiWindowMultiagentApplication->end();
   } // Fl_Double_Window* guiWindowMultiagentApplication
   return guiWindowMultiagentApplication;
@@ -135,6 +166,10 @@ static void cb_Quit1(Fl_Button*, void*) {
 
 Fl_Text_Display *guiTextDisplayYPLog=(Fl_Text_Display *)0;
 
+static void cb_Clear(Fl_Button*, void*) {
+  onguiButtonClearYellowPages();
+}
+
 /**
  Main menu of the yellowpages application.
 */
@@ -144,13 +179,13 @@ Fl_Double_Window* make_window_yellowpages_application() {
       o->callback((Fl_Callback*)cb_Quit1);
       o->align(Fl_Align(FL_ALIGN_CLIP));
     } // Fl_Button* o
-    { Fl_Group* o = new Fl_Group(5, 35, 180, 25);
-      o->end();
-    } // Fl_Group* o
-    { guiTextDisplayYPLog = new Fl_Text_Display(5, 25, 585, 520, "Application log");
+    { guiTextDisplayYPLog = new Fl_Text_Display(5, 50, 585, 495, "Application log");
       guiTextDisplayYPLog->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       Fl_Group::current()->resizable(guiTextDisplayYPLog);
     } // Fl_Text_Display* guiTextDisplayYPLog
+    { Fl_Button* o = new Fl_Button(5, 5, 585, 25, "Clear Yellow Pages");
+      o->callback((Fl_Callback*)cb_Clear);
+    } // Fl_Button* o
     guiWindowYellowPagesApplication->end();
   } // Fl_Double_Window* guiWindowYellowPagesApplication
   return guiWindowYellowPagesApplication;
